@@ -6,6 +6,7 @@ Created on Feb 26, 2015
 
 import json
 import logging
+import time
 from ryu.base import app_manager
 from webob import Response
 from ryu.app.wsgi import ControllerBase, WSGIApplication, route
@@ -54,6 +55,7 @@ URI_API_REST_SERVICES = '/services'
 URI_API_REST_SERVICE = URI_API_REST_SERVICES + '/service'
 URI_API_REST_SERVICES_LSPS = URI_API_REST_SERVICES + '/lsps'
 URI_API_REST_TOPOLOGY_NODE_OF = URI_API_REST_TOPOLOGY_NODE + '/of'
+URI_API_REST_SERVICES_LOAD = URI_API_REST_SERVICES + '/load'
 
 PATH = os.path.dirname(__file__)
 
@@ -416,6 +418,100 @@ class GUIServerController(ControllerBase):
     ##########################################################################
     ########## MPLS API REST
     ########################################################################## 
+    @route('ws_mpls_services', URI_API_REST_SERVICES_LOAD + '/{index}', methods=['GET'], requirements={'index':''})
+    def load_services(self, req, **kwargs):
+          
+        print 'Loading custom services..'
+
+        index = int(kwargs['index'])
+
+        nodo1 = "192.168.1.14"
+        nodo2 = "192.168.1.12"
+        interfazNodo1 = "10.0.0.2"
+        interfazNodo2 = "10.1.0.2"
+        cantidadDeVPNs = 20
+
+        json_template = {}
+        json_template['ingress_node'] = ""
+        json_template['egress_node'] = ""
+        json_template['ingress_interface'] = ""
+        json_template['egress_interface'] = ""
+        json_template['eth_src'] = ""
+        json_template['eth_dst'] = ""
+        json_template['eth_type'] = ""
+        json_template['vlan_vID'] = ""
+        json_template['vlanPCP'] = ""
+        json_template['ARP_spa'] = ""
+        json_template['ARP_tpa'] = ""
+        json_template['IPv4_src'] = ""
+        json_template['IPv4_dst'] = ""
+        json_template['IPv6_src'] = ""
+        json_template['IPv6_dst'] = ""
+        json_template['ICMPv4_type'] = ""
+        json_template['ICMPv4_code'] = ""
+        json_template['ICMPv6_type'] = ""
+        json_template['ICMPv6_code'] = ""
+        json_template['TCP_src'] = ""
+        json_template['TCP_dst'] = ""
+        json_template['UDP_src'] = ""
+        json_template['UDP_dst'] = ""
+        json_template['SCTP_src'] = ""
+        json_template['SCTP_dst'] = ""
+        json_template['service_name'] = ""
+        json_template['service_color'] = "RGB(60,96,122)"
+        json_template['ID'] = ""
+        json_template['IP_proto'] = ""
+        json_template['VPN_service_type'] = 2
+
+        for i in range(index,index+cantidadDeVPNs):
+            datos = json_template
+            datos['ingress_node'] = nodo1
+            datos['egress_node'] = nodo2
+            datos['ingress_interface'] = interfazNodo1
+            datos['egress_interface'] = interfazNodo2
+            datos['service_name'] = "VPN" + str(i) + "Ida"
+            datos['vlan_vID'] = str(i)
+        
+            print "******************************************" + str(i)
+            #Get topology data from JSON format data
+            service = JSONToDTService(json.dumps(datos))
+            proxy = self.proxy
+            result = proxy.add_service(service)
+            if result is None or not result:
+                return Response(status=500)
+
+            # time.sleep(0.5)
+
+            datos = json_template
+            datos['ingress_node'] = nodo2
+            datos['egress_node'] = nodo1
+            datos['ingress_interface'] = interfazNodo2
+            datos['egress_interface'] = interfazNodo1
+            datos['service_name'] = "VPN" + str(i) + "Vuelta"
+            datos['vlan_vID'] = str(i)
+
+            # print json.dumps(datos)
+            #Get topology data from JSON format data
+            service = JSONToDTService(json.dumps(datos))
+            proxy = self.proxy
+            result = proxy.add_service(service)
+            if result is None or not result:
+                return Response(status=500)
+
+            # time.sleep(0.5)
+
+        try:    
+            body = json.dumps({'Result': 'OK'}, 2)
+            return Response(content_type='json', body=body, status=200)
+        except Exception as e:
+            return Response(status=500)
+
+
+
+
+
+
+
     @route('ws_mpls_services', URI_API_REST_SERVICES, methods=['GET'])
     def get_services(self, req, **kwargs):
           

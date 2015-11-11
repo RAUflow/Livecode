@@ -82,7 +82,7 @@ class SNMPAgents(Singleton, object):
 
 		try:
 			json_data = requests.get(url)
-			data = json.loads(json_data.json())
+			data = json.loads(json_data.text)
 
 			if data is not None:
 				datapath_id = str(int(data["dpid"], 16))
