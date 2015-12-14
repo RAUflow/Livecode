@@ -429,7 +429,7 @@ class GUIServerController(ControllerBase):
         nodo2 = "192.168.1.12"
         interfazNodo1 = "10.0.0.2"
         interfazNodo2 = "10.1.0.2"
-        cantidadDeVPNs = 20
+        cantidadDeVPNs = index
 
         json_template = {}
         json_template['ingress_node'] = ""
@@ -438,7 +438,7 @@ class GUIServerController(ControllerBase):
         json_template['egress_interface'] = ""
         json_template['eth_src'] = ""
         json_template['eth_dst'] = ""
-        json_template['eth_type'] = ""
+        json_template['eth_type'] = "0x0800"
         json_template['vlan_vID'] = ""
         json_template['vlanPCP'] = ""
         json_template['ARP_spa'] = ""
@@ -461,18 +461,23 @@ class GUIServerController(ControllerBase):
         json_template['service_color'] = "RGB(60,96,122)"
         json_template['ID'] = ""
         json_template['IP_proto'] = ""
-        json_template['VPN_service_type'] = 2
+        json_template['VPN_service_type'] = 3
 
-        for i in range(index,index+cantidadDeVPNs):
+        for i in range(0,cantidadDeVPNs):
+
             datos = json_template
             datos['ingress_node'] = nodo1
             datos['egress_node'] = nodo2
             datos['ingress_interface'] = interfazNodo1
             datos['egress_interface'] = interfazNodo2
             datos['service_name'] = "VPN" + str(i) + "Ida"
-            datos['vlan_vID'] = str(i)
+            # datos['IPv4_src'] = "1.1." + str(i/256) + "." + str(i%256)
+            datos['vlan_vID'] = hex(i)[2:]
+            datos['vlanPCP'] = hex(i/4096)[2:]
         
-            print "******************************************" + str(i)
+            print "******************************************"
+            print "Creando Servicio de ida de VPN " + str(i)
+            print "******************************************"
             #Get topology data from JSON format data
             service = JSONToDTService(json.dumps(datos))
             proxy = self.proxy
@@ -488,9 +493,13 @@ class GUIServerController(ControllerBase):
             datos['ingress_interface'] = interfazNodo2
             datos['egress_interface'] = interfazNodo1
             datos['service_name'] = "VPN" + str(i) + "Vuelta"
-            datos['vlan_vID'] = str(i)
+            # datos['IPv4_src'] = "1.1." + str(i/256) + "." + str(i%256)
+            datos['vlan_vID'] = hex(i)[2:]
+            datos['vlanPCP'] = hex(i/4096)[2:]
 
-            # print json.dumps(datos)
+            print "******************************************"
+            print "Creando Servicio de vuelta de VPN " + str(i)
+            print "******************************************"
             #Get topology data from JSON format data
             service = JSONToDTService(json.dumps(datos))
             proxy = self.proxy
