@@ -1441,7 +1441,7 @@ class TopologyController(Singleton, object):
                 #Install flow on datapath
 
                 #Process all other nodes except penultimate and ultimate nodes
-                ingress_int = path[0].from_node_int
+                ingress_int = path[0].to_node_int
                 label_in = mpls_labels[0]
                 for i in range(1, len(path)-1):
                     node = path[i].from_node_int.node
@@ -1478,7 +1478,7 @@ class TopologyController(Singleton, object):
                     ilm_adds[node.router_id] = ilm_entry
 
                     #Update ingress interface and label for next hop
-                    ingress_int = path[i].from_node_int
+                    ingress_int = path[i].to_node_int
                     label_in = mpls_labels[i]
 
                 #Process penultimate hop that is equal to process ultimate link
