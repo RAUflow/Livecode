@@ -438,7 +438,7 @@ class GUIServerController(ControllerBase):
         json_template['egress_interface'] = ""
         json_template['eth_src'] = ""
         json_template['eth_dst'] = ""
-        json_template['eth_type'] = "0x0800"
+        json_template['eth_type'] = ""
         json_template['vlan_vID'] = ""
         json_template['vlanPCP'] = ""
         json_template['ARP_spa'] = ""
@@ -461,7 +461,7 @@ class GUIServerController(ControllerBase):
         json_template['service_color'] = "RGB(60,96,122)"
         json_template['ID'] = ""
         json_template['IP_proto'] = ""
-        json_template['VPN_service_type'] = 3
+        json_template['VPN_service_type'] = 2
 
         for i in range(0,cantidadDeVPNs):
 
