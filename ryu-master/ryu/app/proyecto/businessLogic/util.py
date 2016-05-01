@@ -421,7 +421,7 @@ def MultiDijkstra(G, start, end):
             #They are adjacents so we get the minimum weight link between them
             print 'start: ' + str(start.router_id) + ', end: ' + str(i.router_id)
             link = get_nodes_min_cost_link(start, i)
-            D[i] = int(link.weight)
+            D[i] = link.weight
             P[i] = link
         else:
             D[i] = -1
@@ -440,11 +440,11 @@ def MultiDijkstra(G, start, end):
             
             print 'Info: start=' + str(start.router_id) + ' end=' + str(end.router_id) 
 
-            if (l != None) and (((D[v] == -1) and (D[w] != -1)) or (D[w] + int(l.weight) < D[v])):
+            if (l != None) and (((D[v] == -1) and (D[w] != -1)) or (D[w] + l.weight < D[v])):
                 
                 print 'v='+ str(v.router_id) + ', D[w]=' + str(D[w]) + ', l.weight='+ str(l.weight) + ', D[v]=' + str(D[v])
 
-                D[v] = D[w] + int(l.weight)
+                D[v] = D[w] + l.weight
                 P[v] = l
 
     return (D,P)
