@@ -10,7 +10,7 @@ import requests
 import json
 
 # Configuration of SNMP AGENT WS
-HOST = '192.168.1.12'
+HOST = '0.0.0.0'
 PORT = '5000'
 URI_APP_SNMP = 'http://' + HOST + ':' + PORT + '/snmp/atp/' 
 
