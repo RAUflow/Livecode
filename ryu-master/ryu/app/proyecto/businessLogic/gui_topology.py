@@ -418,18 +418,18 @@ class GUIServerController(ControllerBase):
     ##########################################################################
     ########## MPLS API REST
     ########################################################################## 
-    @route('ws_mpls_services', URI_API_REST_SERVICES_LOAD + '/{index}', methods=['GET'], requirements={'index':''})
+    @route('ws_mpls_services', URI_API_REST_SERVICES_LOAD + '/{start_index}/{end_index}', methods=['GET'], requirements={'start_index':'', 'end_index':''})
     def load_services(self, req, **kwargs):
           
         print 'Loading custom services..'
 
-        index = int(kwargs['index'])
+        start_index = int(kwargs['start_index'])
+        end_index = int(kwargs['end_index'])
 
         nodo1 = "192.168.1.14"
         nodo2 = "192.168.1.12"
         interfazNodo1 = "10.0.0.2"
         interfazNodo2 = "10.1.0.2"
-        cantidadDeVPNs = index
 
         json_template = {}
         json_template['ingress_node'] = ""
@@ -463,7 +463,7 @@ class GUIServerController(ControllerBase):
         json_template['IP_proto'] = ""
         json_template['VPN_service_type'] = 2
 
-        for i in range(0,cantidadDeVPNs):
+        for i in range(start_index,end_index):
 
             datos = json_template
             datos['ingress_node'] = nodo1
