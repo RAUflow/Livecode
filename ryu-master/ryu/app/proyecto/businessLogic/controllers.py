@@ -23,6 +23,8 @@ import settings
 
 import copy
 
+from datetime import datetime
+
 #######################################################################################
 ################# TOPOLOGY CONTROLLER #################################################
 ##### 
@@ -908,8 +910,10 @@ class TopologyController(Singleton, object):
         Creates LSP for specific service
         '''
 
+        print "Antes de calcular el camino: " + str(datetime.now().time())
         #Get the best path between source and destination nodes on MPLS core (Links collection)
         path = self.get_best_path(service.ingress_node, service.egress_node)
+        print "Despues de calcular el camino y antes de calcular etiquetas MPLS: " + str(datetime.now().time())
 
         #Get lsp from best path
         lsp_labels = self.get_path_mpls_labels(path)
@@ -927,6 +931,8 @@ class TopologyController(Singleton, object):
         ftn_add = {}
         ilm_add = {}
         ftn_add, ilm_add = self.update_mpls_tables(service, path, lsp_labels)
+
+        print "Despues de calcular etiquetas MPLS y antes de instalar flujos: " + str(datetime.now().time())
 
         ### Update OF tables
 
@@ -992,6 +998,8 @@ class TopologyController(Singleton, object):
                                                         ovs_port_in=interface, 
                                                         ovs_port_out=next_hop, label_in=service.label, 
                                                         action=action, interface=service.egress_interface)
+
+        print "Despues de instalar flujos: " + str(datetime.now().time())
 
         return lsp
 

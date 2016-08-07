@@ -41,6 +41,7 @@ from ryu.app.wsgi import (
 )
 from ryu.topology import event, switches
 from ryu.controller.handler import set_ev_cls
+from datetime import datetime
 
 #API REST config
 URI_API_REST_TOPOLOGY = '/topology'
@@ -542,6 +543,7 @@ class GUIServerController(ControllerBase):
     def add_service(self, req, **kwargs):
           
         print 'REST Service: POST Services'
+        print "Servicio invocado: " + str(datetime.now().time())
 
         #Separetes HTTP header from HTTP body
         data = getHTTPBody(req)
@@ -557,6 +559,7 @@ class GUIServerController(ControllerBase):
 
         try:    
             body = json.dumps({'Result': 'OK'}, 2)
+            print "Servicio creado: " + str(datetime.now().time())
             return Response(content_type='json', body=body, status=200)
         except Exception as e:
             return Response(status=500)
